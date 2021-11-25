@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <title>window.BarcodeDetector</title>
+    <style>
+      body {
+        overflow: hidden;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .root {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+      .header {
+        position: absolute;
+        top: 0;
+        background-color: #ffc107;
+        height: 30px;
+        line-height: 30px;
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+    <script type="text/javascript">
+      window.onload = () => {
+        detect();
+      };
+
+      async function detect() {
+        const list = document.getElementById("barcode-list");
+        try {
+          const barcodeDetector = new BarcodeDetector();
+          let itemsFound = [];
+          const mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
+
+          const video = document.createElement("video");
+          video.srcObject = mediaStream;
+          video.autoplay = true;
+
+          list.before(video);
+
+          function render() {
+            barcodeDetector
+              .detect(video)
+              .then((barcodes) => {
+                barcodes.forEach((barcode) => {
+                  if (!itemsFound.includes(barcode.rawValue)) {
+                    itemsFound.push(barcode.rawValue);
+                    const li = document.createElement("li");
+                    li.innerHTML = barcode.rawValue;
+                    list.appendChild(li);
+                  }
+                });
+              })
+              .catch(console.error);
+          }
+
+          (function renderLoop() {
+            requestAnimationFrame(renderLoop);
+            render();
+          })();
+        } catch (error) {
+          const span = document.createElement("span");
+          span.innerHTML = error.message;
+          list.before(span);
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="header">
+      Credits:
+      <a
+        href="https://daily-dev-tips.com/posts/detecting-barcodes-from-the-webcam/"
+        >https://daily-dev-tips.com/posts/detecting-barcodes-from-the-webcam/</a
+      >
+      &middot; GitHub:
+      <a href="https://github.com/allardvanderouw/window-barcodedetector"
+        >https://github.com/allardvanderouw/window-barcodedetector</a
+      >
+    </div>
+    <div class="root">
+      <ul id="barcode-list"></ul>
+    </div>
+  </body>
+</html>
