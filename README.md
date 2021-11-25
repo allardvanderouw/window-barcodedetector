@@ -1,5 +1,7 @@
 # window-barcodedetector
 
-Run https://daily-dev-tips.com/posts/detecting-barcodes-from-the-webcam/ on Netlify.
+Source of https://window-barcodedetector.netlify.app/
 
-I am not the author of the blog.
+Runs the code of https://daily-dev-tips.com/posts/detecting-barcodes-from-the-webcam/ on Netlify for easy access and testing.
+
+I am not the author of the blog or the detection source code, credits are for Chris Bongers, the owner of https://daily-dev-tips.com.
